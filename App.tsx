@@ -10,6 +10,8 @@ import { Select } from './src/components/Select'
 import { Alert } from 'react-native'
 import { SheetModal } from './src/components/SheetModal'
 import { useState } from 'react'
+import { ToastProvider, ToastViewport } from '@tamagui/toast'
+import { ToastDemo } from './src/components/ToastDemo'
 
 const fruitSchema = z.object({
   fruit: z.string().nonempty({ message: 'Fruit is required!' }),
@@ -25,7 +27,6 @@ export default function App() {
   })
 
   const [open, setOpen] = useState(false)
-
   const fruitForm = useForm<FruitData>({
     resolver: zodResolver(fruitSchema),
   })
@@ -42,30 +43,35 @@ export default function App() {
   return (
     <TamaguiProvider config={config}>
       <Theme name="dark">
-        <StatusBar style="light" />
+        <ToastProvider>
+          <StatusBar style="light" />
 
-        <FormProvider {...fruitForm}>
-          <YStack
-            f={1}
-            jc="center"
-            gap="$4"
-            p="$4"
-            ai="center"
-            backgroundColor={'$background'}
-          >
-            <Select name="fruit" />
+          <FormProvider {...fruitForm}>
+            <YStack
+              f={1}
+              jc="center"
+              gap="$4"
+              p="$4"
+              ai="center"
+              backgroundColor={'$background'}
+            >
+              <Select name="fruit" />
 
-            <Button w="100%" onPress={handleSubmit(handleChooseFruit)}>
-              Submit
-            </Button>
-            <Button w="100%" onPress={() => setOpen(true)}>
-              Open modal
-            </Button>
-          </YStack>
-          <SheetModal open={open} setOpen={setOpen}>
-            <Heading>Title Modal</Heading>
-          </SheetModal>
-        </FormProvider>
+              <Button w="100%" onPress={handleSubmit(handleChooseFruit)}>
+                Submit
+              </Button>
+              <Button w="100%" onPress={() => setOpen(true)}>
+                Open modal
+              </Button>
+
+              <ToastDemo />
+            </YStack>
+            <SheetModal open={open} setOpen={setOpen}>
+              <Heading>Title Modal</Heading>
+            </SheetModal>
+          </FormProvider>
+          <ToastViewport />
+        </ToastProvider>
       </Theme>
     </TamaguiProvider>
   )
